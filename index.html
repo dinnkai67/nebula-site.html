@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>nebula-site.games</title>
+  <title>dinnukai</title>
   <style>
     body {
       margin:0;
@@ -21,96 +21,26 @@
   </style>
 </head>
 <body>
-  <h1>🚀 nebula-site.games</h1>
-  <p>Play games directly on this page!</p>
+  <h1>🚀 dinnukai</h1>
+  <p>Learn about space!</p>
 
   <div class="container">
-
-    <!-- TIC TAC TOE -->
-    <div class="game">
-      <h2>Tic Tac Toe</h2>
-      <div id="board"></div>
-      <p id="status"></p>
-    </div>
-
-    <!-- CLICKER GAME -->
-    <div class="game">
-      <h2>Space Clicker</h2>
-      <p>Score: <span id="score">0</span></p>
-      <button onclick="addScore()">Tap the Nebula!</button>
-    </div>
-
-    <!-- SPACE FACTS -->
     <div class="game">
       <h2>Space Facts</h2>
-      <p id="fact">The Sun is a star at the center of our solar system.</p>
-      <button onclick="nextFact()">Next Fact</button>
+      <ul>
+        <li>The Sun is a star at the center of our solar system.</li>
+        <li>Earth is the third planet from the Sun.</li>
+        <li>The Moon is Earth's only natural satellite.</li>
+        <li>Mars is known as the Red Planet.</li>
+        <li>Jupiter is the largest planet in our solar system.</li>
+        <li>Saturn has beautiful rings made of ice and rock.</li>
+        <li>Uranus rotates on its side.</li>
+        <li>Neptune is the windiest planet.</li>
+        <li>Pluto was reclassified as a dwarf planet in 2006.</li>
+        <li>A light year is the distance light travels in one year.</li>
+      </ul>
     </div>
-
   </div>
 
-<script>
-/* TIC TAC TOE */
-const board=document.getElementById('board');
-const statusText=document.getElementById('status');
-let cells=[];
-let turn='X';
-let gameOver=false;
-
-function checkWin(){
-  const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-  for(let w of wins){
-    if(cells[w[0]].textContent &&
-       cells[w[0]].textContent===cells[w[1]].textContent &&
-       cells[w[1]].textContent===cells[w[2]].textContent){
-        statusText.textContent=cells[w[0]].textContent+" wins!";
-        gameOver=true;
-        return true;
-    }
-  }
-  if(cells.every(c=>c.textContent) && !gameOver){
-    statusText.textContent="Draw!";
-    gameOver=true;
-  }
-  return false;
-}
-
-for(let i=0;i<9;i++){
-  let btn=document.createElement('button');
-  btn.style.width='60px';btn.style.height='60px';btn.style.fontSize='24px';
-  btn.onclick=()=>{
-    if(!btn.textContent && !gameOver){
-      btn.textContent=turn;
-      if(!checkWin()) turn=turn==='X'?'O':'X';
-    }
-  };
-  board.appendChild(btn);
-  if(i%3===2) board.appendChild(document.createElement('br'));
-  cells.push(btn);
-}
-
-/* CLICKER */
-let score=0;
-function addScore(){score++;document.getElementById('score').textContent=score;}
-
-/* SPACE FACTS */
-const facts=[
-  "The Sun is a star at the center of our solar system.",
-  "Earth is the third planet from the Sun.",
-  "The Moon is Earth's only natural satellite.",
-  "Mars is known as the Red Planet.",
-  "Jupiter is the largest planet in our solar system.",
-  "Saturn has beautiful rings made of ice and rock.",
-  "Uranus rotates on its side.",
-  "Neptune is the windiest planet.",
-  "Pluto was reclassified as a dwarf planet in 2006.",
-  "A light year is the distance light travels in one year."
-];
-let factIndex=0;
-function nextFact(){
-  factIndex=(factIndex+1)%facts.length;
-  document.getElementById('fact').textContent=facts[factIndex];
-}
-</script>
 </body>
 </html>
