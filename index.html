@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nebula Site - Space Games</title>
+  <title>nebula-site.games</title>
   <style>
     body {
       margin:0;
@@ -21,7 +21,7 @@
   </style>
 </head>
 <body>
-  <h1>🚀 Nebula Site – Space Game Hub</h1>
+  <h1>🚀 nebula-site.games</h1>
   <p>Play games directly on this page!</p>
 
   <div class="container">
@@ -38,34 +38,6 @@
       <h2>Space Clicker</h2>
       <p>Score: <span id="score">0</span></p>
       <button onclick="addScore()">Tap the Nebula!</button>
-    </div>
-
-    <!-- SNAKE GAME -->
-    <div class="game">
-      <h2>Mini Snake</h2>
-      <canvas id="snake" width="300" height="300"></canvas>
-      <p>Score: <span id="snakeScore">0</span> | Use arrow keys</p>
-    </div>
-
-    <!-- SPACE RUNNER -->
-    <div class="game">
-      <h2>Space Runner</h2>
-      <canvas id="runner" width="300" height="200"></canvas>
-      <p>Press SPACE to jump | Score: <span id="runnerScore">0</span></p>
-    </div>
-
-    <!-- SHOOTING GAME -->
-    <div class="game">
-      <h2>Shooting Stars</h2>
-      <canvas id="shooter" width="300" height="300"></canvas>
-      <p>Click to shoot | Score: <span id="shootScore">0</span></p>
-    </div>
-
-    <!-- ARCHERY -->
-    <div class="game">
-      <h2>Archery</h2>
-      <canvas id="archery" width="300" height="300"></canvas>
-      <p>Click to aim and shoot | Score: <span id="archeryScore">0</span></p>
     </div>
 
     <!-- SPACE FACTS -->
@@ -120,165 +92,6 @@ for(let i=0;i<9;i++){
 /* CLICKER */
 let score=0;
 function addScore(){score++;document.getElementById('score').textContent=score;}
-
-/* SNAKE */
-const canvas=document.getElementById('snake');
-const ctx=canvas.getContext('2d');
-let snake=[{x:150,y:150}];
-let dir={x:10,y:0};
-let food={x:50,y:50};
-let snakeScore=0;
-let snakeGameOver=false;
-
-function generateFood(){
-  do{
-    food={x:Math.floor(Math.random()*30)*10,y:Math.floor(Math.random()*30)*10};
-  }while(snake.some(s=>s.x===food.x && s.y===food.y));
-}
-
-function drawSnake(){
-  if(snakeGameOver) return;
-  ctx.fillStyle='black';ctx.fillRect(0,0,300,300);
-  ctx.fillStyle='lime';
-  snake.forEach(s=>ctx.fillRect(s.x,s.y,10,10));
-  ctx.fillStyle='red';ctx.fillRect(food.x,food.y,10,10);
-
-  let head={x:snake[0].x+dir.x,y:snake[0].y+dir.y};
-  if(head.x<0 || head.x>=300 || head.y<0 || head.y>=300 || snake.some(s=>s.x===head.x && s.y===head.y)){
-    snakeGameOver=true;
-    document.getElementById('snakeScore').textContent=snakeScore;
-    return;
-  }
-  snake.unshift(head);
-
-  if(head.x===food.x && head.y===food.y){
-    snakeScore++;
-    document.getElementById('snakeScore').textContent=snakeScore;
-    generateFood();
-  } else snake.pop();
-}
-setInterval(drawSnake,120);
-
-window.addEventListener('keydown',e=>{
-  if(snakeGameOver) return;
-  if(e.key==='ArrowUp' && dir.y===0) dir={x:0,y:-10};
-  if(e.key==='ArrowDown' && dir.y===0) dir={x:0,y:10};
-  if(e.key==='ArrowLeft' && dir.x===0) dir={x:-10,y:0};
-  if(e.key==='ArrowRight' && dir.x===0) dir={x:10,y:0};
-});
-
-/* SPACE RUNNER */
-const runnerCanvas=document.getElementById('runner');
-const runnerCtx=runnerCanvas.getContext('2d');
-let runnerY=150;
-let runnerVel=0;
-let obstacles=[];
-let runnerScore=0;
-let runnerGameOver=false;
-
-function drawRunner(){
-  if(runnerGameOver) return;
-  runnerCtx.fillStyle='black';runnerCtx.fillRect(0,0,300,200);
-  runnerCtx.fillStyle='blue';runnerCtx.fillRect(50,runnerY,20,20); // player
-  runnerCtx.fillStyle='red';
-  obstacles.forEach(o=>{runnerCtx.fillRect(o.x,o.y,20,20); o.x-=5;});
-  obstacles=obstacles.filter(o=>o.x>-20);
-
-  if(Math.random()<0.01) obstacles.push({x:300,y:150});
-  runnerY+=runnerVel;
-  runnerVel+=0.5;
-  if(runnerY>150) runnerY=150;
-  if(runnerY<0) runnerY=0;
-
-  obstacles.forEach(o=>{
-    if(o.x<70 && o.x>30 && runnerY+20>o.y && runnerY<o.y+20){
-      runnerGameOver=true;
-    }
-  });
-  runnerScore++;
-  document.getElementById('runnerScore').textContent=runnerScore;
-}
-setInterval(drawRunner,50);
-
-window.addEventListener('keydown',e=>{
-  if(e.code==='Space' && runnerY===150){
-    runnerVel=-10;
-  }
-});
-
-/* SHOOTING GAME */
-const shooterCanvas=document.getElementById('shooter');
-const shooterCtx=shooterCanvas.getContext('2d');
-let targets=[];
-let bullets=[];
-let shootScore=0;
-
-function drawShooter(){
-  shooterCtx.fillStyle='black';shooterCtx.fillRect(0,0,300,300);
-  shooterCtx.fillStyle='yellow';
-  targets.forEach(t=>{shooterCtx.fillRect(t.x,t.y,10,10); t.y+=2;});
-  targets=targets.filter(t=>t.y<300);
-
-  shooterCtx.fillStyle='white';
-  bullets.forEach(b=>{shooterCtx.fillRect(b.x,b.y,5,10); b.y-=5;});
-  bullets=bullets.filter(b=>b.y>-10);
-
-  if(Math.random()<0.02) targets.push({x:Math.random()*290,y:0});
-
-  bullets.forEach(b=>{
-    targets.forEach(t=>{
-      if(b.x<t.x+10 && b.x+5>t.x && b.y<t.y+10 && b.y+10>t.y){
-        targets.splice(targets.indexOf(t),1);
-        bullets.splice(bullets.indexOf(b),1);
-        shootScore++;
-        document.getElementById('shootScore').textContent=shootScore;
-      }
-    });
-  });
-}
-setInterval(drawShooter,50);
-
-shooterCanvas.addEventListener('click',e=>{
-  bullets.push({x:e.offsetX,y:280});
-});
-
-/* ARCHERY */
-const archeryCanvas=document.getElementById('archery');
-const archeryCtx=archeryCanvas.getContext('2d');
-let arrow={x:150,y:250,dx:0,dy:0,fired:false};
-let target={x:Math.random()*250+25,y:50};
-let archeryScore=0;
-
-function drawArchery(){
-  archeryCtx.fillStyle='black';archeryCtx.fillRect(0,0,300,300);
-  archeryCtx.fillStyle='red';archeryCtx.fillRect(target.x,target.y,20,20);
-  archeryCtx.fillStyle='white';archeryCtx.fillRect(arrow.x,arrow.y,5,20);
-  if(arrow.fired){
-    arrow.x+=arrow.dx;
-    arrow.y+=arrow.dy;
-    if(arrow.x<0 || arrow.x>300 || arrow.y<0 || arrow.y>300){
-      arrow={x:150,y:250,dx:0,dy:0,fired:false};
-    }
-    if(arrow.x>target.x && arrow.x<target.x+20 && arrow.y>target.y && arrow.y<target.y+20){
-      archeryScore++;
-      document.getElementById('archeryScore').textContent=archeryScore;
-      target={x:Math.random()*250+25,y:50};
-      arrow={x:150,y:250,dx:0,dy:0,fired:false};
-    }
-  }
-}
-setInterval(drawArchery,50);
-
-archeryCanvas.addEventListener('click',e=>{
-  if(!arrow.fired){
-    let dx=e.offsetX-150;
-    let dy=e.offsetY-250;
-    let dist=Math.sqrt(dx*dx+dy*dy);
-    arrow.dx=dx/dist*5;
-    arrow.dy=dy/dist*5;
-    arrow.fired=true;
-  }
-});
 
 /* SPACE FACTS */
 const facts=[
